@@ -2,16 +2,17 @@ import { BLOCK_META } from '../data';
 import { ROUTES } from '../data';
 import InfoPill from './InfoPill';
 
-export default function BuildingCard({ b, isExpanded, onToggle, nested, isVisited, onToggleVisited, isInRoute, onToggleRoute }) {
+export default function BuildingCard({ b, isExpanded, onToggle, nested, isVisited, onToggleVisited }) {
   const meta = BLOCK_META[b.block];
   return (
     <div
       style={{
         background: nested ? 'var(--bg-nested)' : 'var(--bg-card)',
         border: `1px solid ${isExpanded ? meta.color : 'var(--border)'}`,
-        borderLeft: `4px solid ${meta.color}`,
+        borderLeft: `4px solid ${isVisited ? 'var(--border)' : meta.color}`,
         marginBottom: nested ? 8 : 12,
         transition: 'all 0.25s ease',
+        opacity: isVisited ? 0.45 : 1,
       }}
     >
       <div
@@ -59,19 +60,7 @@ export default function BuildingCard({ b, isExpanded, onToggle, nested, isVisite
                 cursor: 'pointer', letterSpacing: 0.5,
               }}
             >
-              {isVisited ? '✓ VISITADO' : 'MARCAR VISITADO'}
-            </button>
-            <button
-              onClick={(e) => { e.stopPropagation(); onToggleRoute(b.id); }}
-              style={{
-                fontFamily: 'var(--font-mono)', fontSize: 11, padding: '6px 14px',
-                border: `1px solid ${isInRoute ? 'var(--red)' : 'var(--border)'}`,
-                background: isInRoute ? 'var(--red)' : 'transparent',
-                color: isInRoute ? 'var(--text)' : 'var(--text-muted)',
-                cursor: 'pointer', letterSpacing: 0.5,
-              }}
-            >
-              {isInRoute ? '✓ EN MI RUTA' : '+ MI RUTA'}
+              {isVisited ? '✓ VISITADO' : 'VISITADO'}
             </button>
           </div>
         </div>

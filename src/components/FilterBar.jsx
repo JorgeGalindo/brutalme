@@ -6,6 +6,8 @@ export default function FilterBar({
   activeBlock, setActiveBlock,
   activeZone, setActiveZone,
   search, setSearch,
+  onlyPending, setOnlyPending,
+  visitedCount,
 }) {
   return (
     <div style={{ position: 'sticky', top: 0, zIndex: 10, background: 'var(--bg)', borderBottom: '1px solid var(--border-faint)', padding: '12px 24px' }}>
@@ -64,6 +66,14 @@ export default function FilterBar({
                 color: activeZone === 'all' ? 'var(--text)' : 'var(--text-faint)',
                 cursor: 'pointer',
               }}>TODAS</button>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-ghost)', marginLeft: 8 }}>|</span>
+              <button onClick={() => setOnlyPending(!onlyPending)} style={{
+                fontFamily: 'var(--font-mono)', fontSize: 10, padding: '3px 8px',
+                border: `1px solid ${onlyPending ? 'var(--green)' : 'var(--border)'}`,
+                background: onlyPending ? 'var(--green)' : 'transparent',
+                color: onlyPending ? 'var(--bg)' : 'var(--text-faint)',
+                cursor: 'pointer',
+              }}>POR VISITAR{visitedCount > 0 ? ` (${BUILDINGS.length - visitedCount})` : ''}</button>
               {ZONES.map(z => {
                 const count = BUILDINGS.filter(b => getZone(b.barrio) === z.key && (activeBlock === 'all' || b.block === activeBlock)).length;
                 return (

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import BuildingCard from './BuildingCard';
 
-export default function RouteCard({ r, routeBuildings, expandedBuildings, onToggleBuilding, visited, onToggleVisited, myRoute, onToggleRoute }) {
+export default function RouteCard({ r, routeBuildings, expandedBuildings, onToggleBuilding, visited, onToggleVisited }) {
   const [open, setOpen] = useState(false);
   return (
     <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', marginBottom: 10, transition: 'border-color 0.2s', borderColor: open ? 'var(--text)' : 'var(--border)' }}>
@@ -42,8 +42,6 @@ export default function RouteCard({ r, routeBuildings, expandedBuildings, onTogg
                   nested
                   isVisited={visited.includes(b.id)}
                   onToggleVisited={onToggleVisited}
-                  isInRoute={myRoute.includes(b.id)}
-                  onToggleRoute={onToggleRoute}
                 />
               ))}
             </div>

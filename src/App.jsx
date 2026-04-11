@@ -13,9 +13,9 @@ export default function App() {
   const [activeBlock, setActiveBlock] = useState('all');
   const [activeZone, setActiveZone] = useState('all');
   const [search, setSearch] = useState('');
+  const [onlyPending, setOnlyPending] = useState(false);
   const [expanded, setExpanded] = useState(new Set());
   const [visited, setVisited] = useLocalStorage('brutalme_visited', []);
-  const [myRoute, setMyRoute] = useLocalStorage('brutalme_mi_ruta', []);
 
   const toggleExpanded = (id) => {
     setExpanded(prev => {
@@ -29,21 +29,21 @@ export default function App() {
     setVisited(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
   };
 
-  const toggleMyRoute = (id) => {
-    setMyRoute(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
-  };
-
   const filtered = BUILDINGS.filter(b => {
     if (activeBlock !== 'all' && b.block !== activeBlock) return false;
     if (activeZone !== 'all' && getZone(b.barrio) !== activeZone) return false;
+    if (onlyPending && visited.includes(b.id)) return false;
     if (search) {
       const q = search.toLowerCase();
       if (![b.name, b.architect, b.barrio, b.address, b.description, b.year].some(f => f.toLowerCase().includes(q))) return false;
     }
     return true;
-  }).sort((a, b) => a.name.localeCompare(b.name));
-
-  const myRouteBuildings = myRoute.map(id => BUILDINGS.find(b => b.id === id)).filter(Boolean);
+  }).sort((a, b) => {
+    const aV = visited.includes(a.id) ? 1 : 0;
+    const bV = visited.includes(b.id) ? 1 : 0;
+    if (aV !== bV) return aV - bV;
+    return a.name.localeCompare(b.name);
+  });
 
   return (
     <div>
@@ -54,6 +54,8 @@ export default function App() {
         activeBlock={activeBlock} setActiveBlock={setActiveBlock}
         activeZone={activeZone} setActiveZone={setActiveZone}
         search={search} setSearch={setSearch}
+        onlyPending={onlyPending} setOnlyPending={setOnlyPending}
+        visitedCount={visited.length}
       />
 
       <main style={{ maxWidth: view === 'map' ? '100%' : 900, margin: '0 auto', padding: view === 'map' ? 0 : '24px 24px 80px' }}>
@@ -76,8 +78,6 @@ export default function App() {
                 onToggle={() => toggleExpanded(b.id)}
                 isVisited={visited.includes(b.id)}
                 onToggleVisited={toggleVisited}
-                isInRoute={myRoute.includes(b.id)}
-                onToggleRoute={toggleMyRoute}
               />
             ))}
             {filtered.length === 0 && (
@@ -98,38 +98,6 @@ export default function App() {
 
         {view === 'routes' && (
           <div style={{ padding: '24px 24px 80px', maxWidth: 900, margin: '0 auto' }}>
-            {/* Mi Ruta */}
-            {myRouteBuildings.length > 0 && (
-              <div style={{ marginBottom: 24 }}>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--red)', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 12 }}>
-                  MI RUTA · {myRouteBuildings.length} edificios
-                </div>
-                <div style={{ marginBottom: 12 }}>
-                  <button
-                    onClick={() => { setView('map'); }}
-                    style={{
-                      fontFamily: 'var(--font-mono)', fontSize: 11, padding: '6px 14px',
-                      border: '1px solid var(--border)', background: 'transparent',
-                      color: 'var(--text-muted)', cursor: 'pointer',
-                    }}
-                  >VER EN MAPA</button>
-                </div>
-                {myRouteBuildings.map(b => (
-                  <BuildingCard
-                    key={b.id} b={b}
-                    isExpanded={expanded.has(b.id)}
-                    onToggle={() => toggleExpanded(b.id)}
-                    nested
-                    isVisited={visited.includes(b.id)}
-                    onToggleVisited={toggleVisited}
-                    isInRoute={true}
-                    onToggleRoute={toggleMyRoute}
-                  />
-                ))}
-                <div style={{ borderBottom: '1px solid var(--border-faint)', marginTop: 20, marginBottom: 20 }} />
-              </div>
-            )}
-
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-ghost)', marginBottom: 16 }}>
               6 RUTAS A PIE · MEDIO DÍA CADA UNA
             </div>
@@ -141,8 +109,6 @@ export default function App() {
                 onToggleBuilding={toggleExpanded}
                 visited={visited}
                 onToggleVisited={toggleVisited}
-                myRoute={myRoute}
-                onToggleRoute={toggleMyRoute}
               />
             ))}
             <div style={{ marginTop: 24, padding: 20, background: 'var(--bg-input)', border: '1px solid var(--border-faint)' }}>
