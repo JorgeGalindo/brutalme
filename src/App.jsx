@@ -12,7 +12,6 @@ export default function App() {
   const [view, setView] = useState('buildings');
   const [activeBlock, setActiveBlock] = useState('all');
   const [activeZone, setActiveZone] = useState('all');
-  const [visitedFilter, setVisitedFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [expanded, setExpanded] = useState(new Set());
   const [visited, setVisited] = useLocalStorage('brutalme_visited', []);
@@ -37,8 +36,6 @@ export default function App() {
   const filtered = BUILDINGS.filter(b => {
     if (activeBlock !== 'all' && b.block !== activeBlock) return false;
     if (activeZone !== 'all' && getZone(b.barrio) !== activeZone) return false;
-    if (visitedFilter === 'visited' && !visited.includes(b.id)) return false;
-    if (visitedFilter === 'pending' && visited.includes(b.id)) return false;
     if (search) {
       const q = search.toLowerCase();
       if (![b.name, b.architect, b.barrio, b.address, b.description, b.year].some(f => f.toLowerCase().includes(q))) return false;
@@ -50,13 +47,12 @@ export default function App() {
 
   return (
     <div>
-      <Header totalBuildings={BUILDINGS.length} visitedCount={visited.length} />
+      <Header />
 
       <FilterBar
         view={view} setView={setView}
         activeBlock={activeBlock} setActiveBlock={setActiveBlock}
         activeZone={activeZone} setActiveZone={setActiveZone}
-        visitedFilter={visitedFilter} setVisitedFilter={setVisitedFilter}
         search={search} setSearch={setSearch}
       />
 

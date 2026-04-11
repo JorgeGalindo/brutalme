@@ -1,16 +1,6 @@
 export default function Footer({ totalBuildings }) {
   return (
     <>
-      {/* Vanishing heritage */}
-      <div style={{ borderTop: '1px solid var(--border-faint)', padding: '28px 24px' }}>
-        <div style={{ maxWidth: 900, margin: '0 auto' }}>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--red)', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 12 }}>Patrimonio en riesgo</div>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.65, margin: '0 0 8px' }}>
-            Varios edificios brutalistas importantes se han perdido o están desapareciendo. La Pagoda (Laboratorios Jorba) de Miguel Fisac, demolida en 1999 pese a protestas masivas, fue el único edificio español seleccionado para una exposición de arquitectura del MoMA de Nueva York. La UVA de Hortaleza (Fernando Higueras, 1963), que Louis Kahn elogió como uno de los doce conjuntos residenciales más humanos del mundo, está siendo demolida bajo un programa de regeneración. Y las Torres de Colón perdieron su revestimiento original y su icónica corona en la reforma de 2020–2024. La carrera por documentar estos edificios — liderada por García Alcántara y el COAM — es también una carrera contra el tiempo.
-          </p>
-        </div>
-      </div>
-
       {/* References */}
       <div style={{ borderTop: '1px solid var(--border-ghost)', padding: '28px 24px' }}>
         <div style={{ maxWidth: 900, margin: '0 auto' }}>
