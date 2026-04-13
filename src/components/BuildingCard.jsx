@@ -1,5 +1,6 @@
 import { BLOCK_META } from '../data';
 import { ROUTES } from '../data';
+import { PHOTOS } from '../data/photos';
 import InfoPill from './InfoPill';
 
 export default function BuildingCard({ b, isExpanded, onToggle, nested, isVisited, onToggleVisited }) {
@@ -38,22 +39,14 @@ export default function BuildingCard({ b, isExpanded, onToggle, nested, isVisite
 
       {isExpanded && (
         <div className="fade-in" style={{ padding: '0 20px 20px', borderTop: '1px solid var(--border-dim)', paddingTop: 16 }}>
-          {b.wikimedia && (
-            <a
-              href={`https://commons.wikimedia.org/wiki/File:${encodeURIComponent(b.wikimedia)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              style={{ display: 'block', margin: '0 0 16px' }}
-            >
-              <img
-                src={`https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(b.wikimedia)}?width=800`}
-                alt={b.name}
-                loading="lazy"
-                onError={(e) => { e.currentTarget.parentElement.style.display = 'none'; }}
-                style={{ width: '100%', maxHeight: 360, objectFit: 'cover', display: 'block', background: 'var(--bg-nested)' }}
-              />
-            </a>
+          {PHOTOS.has(b.id) && (
+            <img
+              src={`${import.meta.env.BASE_URL}buildings/${b.id}.jpg`}
+              alt={b.name}
+              loading="lazy"
+              onError={(e) => { e.currentTarget.style.display = 'none'; }}
+              style={{ width: '100%', maxHeight: 360, objectFit: 'cover', display: 'block', background: 'var(--bg-nested)', margin: '0 0 16px' }}
+            />
           )}
           <p style={{ fontFamily: 'var(--font-body)', fontSize: 15, color: '#ccc', lineHeight: 1.65, margin: '0 0 16px' }}>{b.description}</p>
 
